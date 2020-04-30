@@ -9,9 +9,12 @@ namespace TicTacToe
      class GameScenes
     {
         
-        protected void SelectPlayType()
+        protected void SelectPlayType(int gameType)
         {
+            switch (gameType)
+            {
 
+            }
         }    
 
         private void AddPlayer()

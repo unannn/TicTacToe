@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace TicTacToe
 {
     class GameFlow : GameScenes
     {      
-        public int SelectType()
+        public int SelectMenuItem()
         {
-            string selectedTypeInString;      
-            int selectedType = 0;
+            string selectedItemInString;      
+            int selectedItem = 0;
             bool rightInput = false;
 
             List<string> menuItem = new List<string>()   //메뉴 리스트 생성
@@ -23,7 +24,7 @@ namespace TicTacToe
                 "5. END GAME"
             };
 
-            while (!rightInput)
+            while (!rightInput)       //1~5의 정수 입력 시 까지 반복
             {
                 foreach (string item in menuItem)
                 {
@@ -33,13 +34,13 @@ namespace TicTacToe
                 Console.WriteLine("\n1~5사이의 정수를 입력하세요\n");
 
                 Console.Write("메뉴 선택 : ");
-                selectedTypeInString = Console.ReadLine();
+                selectedItemInString = Console.ReadLine();
 
-                if(selectedTypeInString.Length == 1)     //문자열의 길이가 1인지 판별 (한자리수 정수를 입력받으려 하므로)
+                if(selectedItemInString.Length == 1)     //문자열의 길이가 1인지 판별 (한자리수 정수를 입력받으려 하므로)
                 {
-                    if (string.Compare(selectedTypeInString, "1") >= 0 && string.Compare(selectedTypeInString, "5") <= 0)        //입력받은 문자열의 크기가 "1" 보다크고 "5"보다 작으면 입력
+                    if (string.Compare(selectedItemInString, "1") >= 0 && string.Compare(selectedItemInString, "5") <= 0)        //입력받은 문자열의 크기가 "1" 보다크고 "5"보다 작으면 입력
                     {
-                        selectedType = int.Parse(selectedTypeInString);
+                        selectedItem = int.Parse(selectedItemInString);
                         rightInput = true;
                     }
                 }
@@ -47,12 +48,27 @@ namespace TicTacToe
                 Console.Clear();
             }
 
-            return selectedType;  //입력받은 문자열 반환
+            return selectedItem;  //입력받은 정수 반환
         }
 
-        public void SelectPlayer(ref string player1, ref string player2,int gameMode)
+        public void SelectPlayer(ref string player1, ref string player2,int gameType)
         {
+            List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
+            StreamReader playerNameListFile = new StreamReader("./playerNameList.txt",Encoding.Default);
+            string line;
+           
+            while ((line = playerNameListFile.ReadLine()) != null)
+            {
+                playerNameList.Add(line);
+            }
+            
+            foreach (string name in playerNameList)
+            {
+                Console.WriteLine(name);
+            }
+                        
         }
+
         public void PlayGame(string player1,string player2,int gameMode)
         {
             switch (gameMode)
