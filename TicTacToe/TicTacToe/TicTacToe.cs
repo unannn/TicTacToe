@@ -6,34 +6,68 @@ using System.Threading.Tasks;
 
 namespace TicTacToe
 {
-    static class GameTypes
+    static class Item
     {
         public const int vsComputer = 1;
         public const int vsPlayer = 2;
-        public const int endGame = 5;
+        public const int addPlayer = 3;
+        public const int ranking = 4;
+        public const int endGame= 5;
+
     }
     class TicTacToe
     {
         private string player1;
         private string player2;
-        private int gameType;
+        private string winner;
+        private int selectedItem;
 
         public TicTacToe()
         {
             player1 = null;
             player2 = null;
-            gameType = 0;
+            winner = null;
+            selectedItem = 0;
         }
 
         public void GameStart()
         {
             GameFlow gameFlow = new GameFlow();
 
-            gameType = gameFlow.SelectMenuItem();
-            
+            while(selectedItem != Item.endGame)
+            {
+                selectedItem = gameFlow.SelectMenuItem();
 
-            gameFlow.SelectPlayer(ref player1,ref player2, gameType);
-            gameFlow.PlayGame(player1, player2, gameType);
+                switch (selectedItem)
+                {
+                    case Item.vsComputer:
+                        gameFlow.SelectPlayer(ref player1);
+                        gameFlow.PlayGame(player1);
+                        break;
+
+                    case Item.vsPlayer:
+                        gameFlow.SelectPlayer(ref player1, ref player2);
+                        winner = gameFlow.PlayGame(player1, player2);
+                        break;
+
+                    case Item.addPlayer:
+                        gameFlow.AddPlayer();
+                        break;
+
+                    case Item.ranking:
+                        gameFlow.ShowPlayerRanking();
+                        break;
+
+                    case Item.endGame:
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+
+            //gameFlow.PlayGame(player1, player2, selectedItem);
 
         }
     }

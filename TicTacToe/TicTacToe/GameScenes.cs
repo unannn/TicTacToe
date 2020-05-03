@@ -8,29 +8,26 @@ namespace TicTacToe
 {
      class GameScenes
     {
-        
-        protected void SelectPlayType(int gameType)
+        public string PlayGame(string player1, string player2)
         {
-            switch (gameType)
-            {
+            string winner = null; ;
 
-            }
-        }    
+            //2인 틱택토
 
-        private void AddPlayer()
-        {
-
+            return winner;
         }
-        protected void PlayerVsComputer()
+
+        public void PlayGame(string player1)
         {
 
         }
 
-        protected void PlayerVsPlayer()
+        public void ShowPlayerRanking()
         {
 
         }
-        protected void ShowPlayerRanking()
+
+        public void AddPlayer()
         {
 
         }

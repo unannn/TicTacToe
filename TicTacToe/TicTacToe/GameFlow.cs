@@ -51,7 +51,65 @@ namespace TicTacToe
             return selectedItem;  //입력받은 정수 반환
         }
 
-        public void SelectPlayer(ref string player1, ref string player2,int gameType)
+        public void SelectPlayer(ref string player1)  //player vs computer
+        {
+            List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
+            StreamReader playerNameListFile = new StreamReader("./playerNameList.txt", Encoding.Default);
+            ConsoleKeyInfo ckey;
+            bool selectPlayer = false;
+            int selectPlayerNumber = 0;
+            string line;
+
+            while ((line = playerNameListFile.ReadLine()) != null)
+            {
+                playerNameList.Add(line);
+            }
+
+            Console.CursorVisible = false;
+
+            while (!selectPlayer)
+            {
+                for(int item = 1; item <= playerNameList.Count; item++)
+                {
+                    if (item == selectPlayerNumber)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+                    Console.WriteLine(playerNameList[item - 1]);
+                    Console.ResetColor();
+
+                }
+                ckey = Console.ReadKey();
+
+                switch (ckey.Key)          //키 입력에 따라 메뉴바 이동, 선택
+                {
+                    case ConsoleKey.DownArrow:
+                        if (selectPlayerNumber >= playerNameList.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
+                        else selectPlayerNumber++;
+                        break;
+
+                    case ConsoleKey.UpArrow:
+                        if (selectPlayerNumber <= 0) selectPlayerNumber = playerNameList.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
+                        else selectPlayerNumber--;
+                        break;
+
+                    case ConsoleKey.Spacebar:
+                        selectPlayer = true;
+                        player1 = playerNameList[selectPlayerNumber];
+                         break;
+
+                    default:
+                        break;
+
+                }
+
+                Console.Clear();
+            }
+
+        }
+
+        public void SelectPlayer(ref string player1, ref string player2)  //player vs player
         {
             List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
             StreamReader playerNameListFile = new StreamReader("./playerNameList.txt",Encoding.Default);
@@ -67,24 +125,6 @@ namespace TicTacToe
                 Console.WriteLine(name);
             }
                         
-        }
-
-        public void PlayGame(string player1,string player2,int gameMode)
-        {
-            switch (gameMode)
-            {
-                case GameTypes.vsPlayer:
-                    PlayerVsPlayer();
-                    break;
-
-                case GameTypes.vsComputer:
-                    PlayerVsComputer();
-                    break;
-
-                default:
-                    //생각해보기
-                    break;
-            }
-        }
+        }       
     }
 }
