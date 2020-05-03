@@ -17,8 +17,8 @@ namespace TicTacToe
 
             List<string> menuItem = new List<string>()   //메뉴 리스트 생성
             {
-                "1. PLAYER VS PLAYER",
-                "2. PLAYER VS COMPUTER",
+                "1. PLAYER VS COMPUTER",
+                "2. PLAYER VS PLAYER",
                 "3. ADD PLAYER",
                 "4. RANKING",
                 "5. END GAME"
@@ -69,14 +69,17 @@ namespace TicTacToe
 
             while (!selectPlayer)
             {
-                for(int item = 1; item <= playerNameList.Count; item++)
+                for(int item = 0; item < playerNameList.Count; item++)
                 {
                     if (item == selectPlayerNumber)
                     {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write("player1-> ");
                     }
-                    Console.WriteLine(playerNameList[item - 1]);
+                    else
+                    {
+                        Console.Write("          ");
+                    }
+                    Console.WriteLine(playerNameList[item]);
                     Console.ResetColor();
 
                 }
@@ -112,19 +115,96 @@ namespace TicTacToe
         public void SelectPlayer(ref string player1, ref string player2)  //player vs player
         {
             List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
-            StreamReader playerNameListFile = new StreamReader("./playerNameList.txt",Encoding.Default);
+            StreamReader playerNameListFile = new StreamReader("./playerNameList.txt", Encoding.Default);
+            ConsoleKeyInfo ckey;
+            bool selectPlayer1 = false;
+            bool selectPlayer2 = false;
+            int selectedPlayer1Number = -1;
+            int selectPlayerNumber = 0;
             string line;
-           
+
             while ((line = playerNameListFile.ReadLine()) != null)
             {
                 playerNameList.Add(line);
             }
-            
-            foreach (string name in playerNameList)
+
+            Console.CursorVisible = false;
+
+            while (!selectPlayer1 || !selectPlayer2)
             {
-                Console.WriteLine(name);
+                for (int item = 0; item < playerNameList.Count; item++)
+                {
+                    if (item == selectPlayerNumber)
+                    {
+                        if (!selectPlayer1) Console.Write("player1-> ");
+                        else if (selectPlayerNumber != selectedPlayer1Number) Console.Write("player2-> ");
+                    }                  
+                    else if(item != selectedPlayer1Number)Console.Write("          ");
+                    
+                    if (selectPlayer1  && selectedPlayer1Number == item) Console.Write("player1-> ");
+
+
+                    Console.WriteLine(playerNameList[item]);
+                    Console.ResetColor();
+
+                }
+                ckey = Console.ReadKey();
+
+                switch (ckey.Key)          //키 입력에 따라 메뉴바 이동, 선택
+                {
+                    case ConsoleKey.DownArrow:
+
+                        if (selectPlayerNumber >= playerNameList.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
+                        else if (selectPlayerNumber == selectedPlayer1Number - 1)
+                        {                             
+                            selectPlayerNumber += 2;
+
+                            if (selectPlayerNumber >= playerNameList.Count) selectPlayerNumber -= playerNameList.Count;
+                        }
+                        else ++selectPlayerNumber;
+
+                        break;
+
+                    case ConsoleKey.UpArrow:
+
+                        if (selectPlayerNumber <= 0) selectPlayerNumber = playerNameList.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
+                        else if (selectPlayerNumber == selectedPlayer1Number + 1)
+                        {
+                            selectPlayerNumber -= 2;
+                            if (selectPlayerNumber < 0) selectPlayerNumber += playerNameList.Count;
+
+                        }
+                        else --selectPlayerNumber;
+
+                        break;
+
+                    case ConsoleKey.Spacebar:
+
+                        if (selectPlayer1 == false)
+                        {
+                            selectPlayer1 = true;
+                            selectedPlayer1Number = selectPlayerNumber;
+                            player1 = playerNameList[selectedPlayer1Number];
+                            ++selectPlayerNumber;
+
+                        }
+                        else
+                        {
+                            selectPlayer2 = true;
+                            player2 = playerNameList[selectPlayerNumber];
+                        }
+
+
+                        break;
+
+                    default:
+                        break;
+
+                }
+
+                Console.Clear();
             }
-                        
+
         }       
     }
 }
