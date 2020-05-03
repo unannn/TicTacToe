@@ -10,6 +10,11 @@ namespace TicTacToe
     {   
         private string player1;
         private string player2;
+        private char[,] board = new char[3,3] {
+            { '□','□','□' } ,
+            { '□','□','□' } ,
+            { '□','□','□' }
+        };
 
         public TicTacToeBoard(string player1, string player2)
         {
@@ -21,35 +26,49 @@ namespace TicTacToe
         {
             this.player1 = player1;
             player2 = null;
-        }
-
-        private char[] board = new char[9] {
-            '□','□','□' ,
-            '□','□','□' ,
-            '□','□','□' 
-        };
+        }      
 
         public void PrintBoard()
         {            
-            for(int row = 0;row < board.Length; row++)
+            for(int row = 0;row < board.GetLength(0); row++)
             {
-                Console.Write("{0}  ", board[row]);
-
-                if (row % 3 == 2) Console.WriteLine();
+                for(int colomn = 0;colomn < board.GetLength(1); colomn++)
+                {
+                    Console.Write("{0}   ", board[row, colomn]);
+                }
+                Console.WriteLine();
             }
         }
 
         public void ModifyBoard(int inputNumber,string activePlayer)
         {
+            inputNumber = inputNumber - 1;            //배열인덱스는 0부터 시작하므로
+
             if(string.Compare(activePlayer,player1) == 0)
             {
-                board[inputNumber] = '○';
+                board[inputNumber / 3,inputNumber % 3] = '○';
             }
             else
             {
-                board[inputNumber] = '×';
+                board[inputNumber / 3, inputNumber % 3] = '×';
             }
+        }
 
+        public string CheckWinner(string player)
+        {           
+            for(int location = 0;location < board.GetLength(0); location++)
+            {
+                if(board[location,0] != '□' && board[0,location] != '□')
+                {
+                    if (board[location, 0] == board[location, 1] && board[location, 0] == board[location, 2]) { return player; }
+                    if (board[0, location] == board[1, location] && board[0, location] == board[2, location]) { return player; }
+                }
+            }
+            if(board[0,0] == board[1,1] && board[0,0] == board[2, 2]) { return player; }
+
+            if(board[0,2] == board[1,1] && board[0,2] == board[3, 0]) { return player; }
+
+            return null;
         }
     }
 
@@ -59,27 +78,48 @@ namespace TicTacToe
         public string PlayGame(string player1, string player2)
         {
             string winner = null;
-            int inputNumber = -1;
             int gameTurnNumber = 0;
+            int inputNumber = -1;
+            string inputNumberInString;
 
             TicTacToeBoard tictactoeBoard = new TicTacToeBoard(player1, player2);
 
             while (gameTurnNumber < 9)
             {
-                tictactoeBoard.PrintBoard();
+                tictactoeBoard.PrintBoard();      //보드 출력
 
-                Console.Write(player1, "1~9 정수입력 : ");
-                inputNumber = int.Parse(Console.ReadLine());
-                if (gameTurnNumber % 2 == 0) tictactoeBoard.ModifyBoard(inputNumber, player1);
-                else tictactoeBoard.ModifyBoard(inputNumber, player2);
-                ++gameTurnNumber;
+                if (gameTurnNumber % 2 == 0) Console.Write("Your turn-> ");
+                else Console.Write("            ");
+                Console.WriteLine(player1);
+                if (gameTurnNumber % 2 != 0) Console.Write("Your turn-> ");
+                else Console.Write("            ");
+                Console.WriteLine(player2);
 
+                Console.Write("1~9 정수입력 : ");
+                inputNumberInString = Console.ReadLine();
+
+                if(inputNumberInString.Length == 1)
+                {
+                    if(string.Compare(inputNumberInString,"1") >= 0 && string.Compare(inputNumberInString, "9") <= 0)
+                    {
+                        inputNumber = int.Parse(inputNumberInString);
+
+                        if (gameTurnNumber % 2 == 0) tictactoeBoard.ModifyBoard(inputNumber, player1);
+                        else tictactoeBoard.ModifyBoard(inputNumber, player2);
+
+                        ++gameTurnNumber;
+                    }
+                }
+                if (gameTurnNumber >= 4)
+                {
+                    if(gameTurnNumber % 2 == 0) winner = tictactoeBoard.CheckWinner(player1);
+                    else winner = tictactoeBoard.CheckWinner(player2);
+                }
                 Console.Clear();
+                if (winner != null) break;
             }
 
-            tictactoeBoard.PrintBoard();
             //2인 틱택토
-            Console.WriteLine(player1+player2);
 
             return winner;
         }
@@ -93,6 +133,22 @@ namespace TicTacToe
         {
 
         }
+
+        public void ShowWinner(string winner)
+        {
+            ConsoleKeyInfo ckey;
+            
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(winner + " WIN!!!!!");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            ckey = Console.ReadKey();
+        }
+
 
         public void AddPlayer()
         {
