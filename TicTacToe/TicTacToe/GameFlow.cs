@@ -24,11 +24,12 @@ namespace TicTacToe
                 "5. END GAME"
             };
 
+            Console.WriteLine("\n    TIC TAC TOE     \n");
             while (!rightInput)       //1~5의 정수 입력 시 까지 반복
             {
                 foreach (string item in menuItem)
                 {
-                    Console.WriteLine(item);
+                    Console.WriteLine(item + "\n");
                 }
 
                 Console.WriteLine("\n1~5사이의 정수를 입력하세요\n");
