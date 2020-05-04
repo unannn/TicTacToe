@@ -78,7 +78,11 @@ namespace TicTacToe
                 {
                     case Item.vsComputer:
                         gameFlow.SelectPlayer(ref player1);
-                        gameFlow.PlayGame(player1);
+                        gameResult = gameFlow.PlayGame(player1);
+
+                        if (gameResult.winner != null) gameFlow.ShowWinner(gameResult.winner);
+                        else gameFlow.ShowDraw();
+
                         break;
 
                     case Item.vsPlayer:

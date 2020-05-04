@@ -16,7 +16,11 @@ namespace TicTacToe
             { '□','□','□' } ,
             { '□','□','□' }
         };
-
+        public char[,] Board
+        {
+            get { return board; }
+            set { board = value; }
+        }
         public TicTacToeBoard(string player1, string player2)
         {
             this.player1 = player1;

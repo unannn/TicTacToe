@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Threading;
 
 namespace TicTacToe
 {
@@ -67,8 +68,7 @@ namespace TicTacToe
             {
                 playerRecord = line.Split(',');
                 players.Add(playerRecord[0]);
-            }
-           
+            }           
            
             Console.CursorVisible = false;
 
@@ -119,7 +119,7 @@ namespace TicTacToe
 
         public void SelectPlayer(ref string player1, ref string player2)  //player vs player
         {
-            List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
+            List<string> playerNameList = new List<string>();   //플레이어 메뉴 리스트 생성
             StreamReader playerListFile = new StreamReader("./playerNameList.txt", Encoding.Default);
             ConsoleKeyInfo ckey;
             bool selectPlayer1 = false;
@@ -203,7 +203,6 @@ namespace TicTacToe
                             player2 = playerNameList[selectPlayerNumber];
                         }
 
-
                         break;
 
                     default:
@@ -213,6 +212,74 @@ namespace TicTacToe
 
                 Console.Clear();
             }
+        }
+        public GameResult PlayGame(string player1)
+        {
+            int gameTurnNumber = 0;
+            bool inputSucess = false;
+            string winner = null;
+            string computer = "Computer";
+            GameResult gameResult = new GameResult(player1, computer);
+
+            TicTacToeBoard tictactoeBoard = new TicTacToeBoard(player1);
+
+            while (gameTurnNumber < tictactoeBoard.BoardLength())
+            {
+                tictactoeBoard.PrintBoard();
+
+                ShowActivePlayer(player1, "Computer", gameTurnNumber);    //누구의 턴인지 보여주는 그래픽 출력
+
+                tictactoeBoard.PrintExampleBoard();       //입력위치번호 예시 출력
+
+                if (gameTurnNumber % 2 == 0)
+                {
+                    inputSucess = InputLocationNumber(player1, ref tictactoeBoard);   //입력위치 입력
+                }
+                else
+                {
+                    inputSucess = InputByComputer(ref tictactoeBoard);
+                }
+
+                if (!inputSucess) continue;
+
+                if (gameTurnNumber >= 4)      //게임이 5턴 이상 되어야 승패가 갈릴 수있으므로 4부터 조사
+                {
+                    if (gameTurnNumber % 2 == 0)
+                    {
+                        winner = tictactoeBoard.CheckWinner(player1);
+                    }
+                    else winner = tictactoeBoard.CheckWinner(computer);
+
+                    if (winner != null) gameResult.isDraw = false;
+                }
+
+                if (gameResult.winner != null && gameResult.isDraw == false)
+                {
+                    if (gameTurnNumber % 2 == 0)
+                    {
+                        gameResult.winner = player1;
+                    }
+                    else
+                    {
+                        gameResult.winner = computer;
+                    }
+                    gameResult.isDraw = false;
+
+                    break;     //승자가 생기면 종료
+                }
+
+
+                ++gameTurnNumber;
+
+                Console.Clear();
+            }
+            tictactoeBoard.PrintBoard();
+
+            Thread.Sleep(1000);
+
+            Console.Clear();
+
+            return gameResult;
         }
 
         public GameResult PlayGame(string player1, string player2)
@@ -228,7 +295,7 @@ namespace TicTacToe
 
                 tictactoeBoard.PrintBoard();      //보드 출력
 
-                  ShowActivePlayer(player1, player2, gameTurnNumber);    //누구의 턴인지 보여주는 그래픽 출력
+                ShowActivePlayer(player1, player2, gameTurnNumber);    //누구의 턴인지 보여주는 그래픽 출력
 
                 tictactoeBoard.PrintExampleBoard();       //입력위치번호 예시 출력
 
@@ -274,12 +341,7 @@ namespace TicTacToe
 
             return gameResult;
         }
-
-        public void PlayGame(string player1)
-        {
-
-        }
-
+        
         public void ShowPlayerRanking()
         {
             StreamReader playerListFileToRead = new StreamReader(new FileStream("./playerNameList.txt", FileMode.Open));

@@ -13,7 +13,7 @@ namespace TicTacToe
         {
             string inputNumberInString = null;
             int inputNumber;            
-
+                        
             Console.Write("1~9 정수입력 : ");
             inputNumberInString = Console.ReadLine();
 
@@ -33,6 +33,57 @@ namespace TicTacToe
             }
             Console.Clear();
             return false;
+        }
+        public bool InputLocationNumber(string player, ref TicTacToeBoard tictactoeBoard)
+        {
+            string inputNumberInString = null;
+            int inputNumber;
+
+            Console.Write("1~9 정수입력 : ");
+            inputNumberInString = Console.ReadLine();
+
+            if (inputNumberInString.Length == 1)
+            {
+                if (string.Compare(inputNumberInString, "1") >= 0 && string.Compare(inputNumberInString, "9") <= 0)
+                {
+                    inputNumber = int.Parse(inputNumberInString);
+                    if (!tictactoeBoard.IsSameLocation(inputNumber))
+                    {
+                        tictactoeBoard.ModifyBoard(inputNumber, player);
+
+                        return true;
+                    }
+                }
+            }
+            Console.Clear();
+            return false;
+        }
+        public bool InputByComputer(ref TicTacToeBoard tictactoeBoard)
+        {
+            char[,] board = new char[3, 3];
+            board = tictactoeBoard.Board;
+
+            //for(int i = 0;i < 3; i++)
+            //{
+            //    Console.WriteLine("{0}   {1}   {2}",board[i, 0], board[i, 1], board[i, 2]);
+            //}
+            if (board[1, 1] == '□')
+            {
+                tictactoeBoard.ModifyBoard(5, "Computer");
+            }
+            else if(board[0,0] == '□') { tictactoeBoard.ModifyBoard(1, "Computer"); }
+            else if (board[0, 2] == '□') { tictactoeBoard.ModifyBoard(3, "Computer"); }
+            else if (board[2, 0] == '□') { tictactoeBoard.ModifyBoard(7, "Computer"); }
+            else if (board[2, 2] == '□') { tictactoeBoard.ModifyBoard(9, "Computer"); }
+            else if (board[0, 1] == '□') { tictactoeBoard.ModifyBoard(2, "Computer"); }
+            else if (board[1, 2] == '□') { tictactoeBoard.ModifyBoard(6, "Computer"); }
+            else if (board[2, 1] == '□') { tictactoeBoard.ModifyBoard(8, "Computer"); }
+            else if (board[1, 0] == '□') { tictactoeBoard.ModifyBoard(4, "Computer"); }
+
+
+            Console.ReadKey();
+
+            return true;
         }
 
         public void ShowWinner(string winner)
@@ -100,12 +151,12 @@ namespace TicTacToe
             if (gameTurnNumber % 2 == 0) Console.Write("Your turn-> ");
             else Console.Write("            ");
 
-            Console.WriteLine(player1 + "○");
+            Console.WriteLine("○ " + player1);
 
             if (gameTurnNumber % 2 != 0) Console.Write("Your turn-> ");
             else Console.Write("            ");
 
-            Console.WriteLine(player2 + "×\n");
+            Console.WriteLine("× " + player2 + "\n");
         }
 
         public void ShowDraw()
