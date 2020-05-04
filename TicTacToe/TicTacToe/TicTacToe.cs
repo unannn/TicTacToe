@@ -15,31 +15,60 @@ namespace TicTacToe
         public const int endGame= 5;
 
     }
-    public struct Player
+    public class Player
     {
         public string playerName;
         public int win;
-        public int lose;        
+        public int lose;
+        public int draw;
+
+        public Player()
+        {
+            playerName = null;
+            win = - 1;
+            lose = -1;
+            draw = -1;
+        }
+        public Player(string name, int win, int lose, int draw)
+        {
+            this.playerName = name;
+            this.win = win;
+            this.lose = lose;
+            this.draw = draw;
+        }
+    }
+    public class GameResult
+    {
+        public string winner;
+        public string loser;
+        public bool isDraw;
+
+        public GameResult(string player1,string player2)
+        {
+            winner = player1;
+            loser = player2;
+            isDraw = true;
+        }
     }
 
     class TicTacToe
     {
         private string player1;
         private string player2;
-        private string winner;
         private int selectedItem;
-
+                
         public TicTacToe()
         {
             player1 = null;
             player2 = null;
-            winner = null;
             selectedItem = 0;
+            
         }
 
         public void GameStart()
         {
             GameFlow gameFlow = new GameFlow();
+            GameResult gameResult;
 
             while(selectedItem != Item.endGame)
             {
@@ -54,10 +83,11 @@ namespace TicTacToe
 
                     case Item.vsPlayer:
                         gameFlow.SelectPlayer(ref player1, ref player2);
-                        winner = gameFlow.PlayGame(player1, player2);
+                        gameResult = gameFlow.PlayGame(player1, player2);
 
-                        if (winner != null) gameFlow.ShowWinner(winner);
+                        if (gameResult.winner != null) gameFlow.ShowWinner(gameResult.winner);
                         else gameFlow.ShowDraw();
+                        
                         break;
 
                     case Item.addPlayer:

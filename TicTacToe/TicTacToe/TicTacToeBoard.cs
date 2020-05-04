@@ -75,11 +75,15 @@ namespace TicTacToe
         {
             for (int location = 0; location < board.GetLength(0); location++)
             {
-                if (board[location, 0] != '□' && board[0, location] != '□')
+                if (board[location, 0] != '□')
                 {
                     if (board[location, 0] == board[location, 1] && board[location, 0] == board[location, 2]) { return player; }
-                    if (board[0, location] == board[1, location] && board[0, location] == board[2, location]) { return player; }
                 }
+
+                if (board[0, location] != '□')
+                {
+                    if (board[0, location] == board[1, location] && board[0, location] == board[2, location]) { return player; }
+                }            
             }
             if (board[0, 0] == board[1, 1] && board[0, 0] == board[2, 2]) { return player; }
 

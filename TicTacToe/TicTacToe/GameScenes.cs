@@ -3,57 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace TicTacToe
 {
     class GameScenes
-    {   
-        
-        public string PlayGame(string player1, string player2)
-        {
-            string winner = null;
-            int gameTurnNumber = 0;
-            bool inputSucess = false;
-
-            TicTacToeBoard tictactoeBoard = new TicTacToeBoard(player1, player2);
-
-            while (gameTurnNumber < tictactoeBoard.BoardLength())
-            {
-
-                tictactoeBoard.PrintBoard();      //보드 출력
-
-                ShowActivePlayer(player1, player2, gameTurnNumber);    //누구의 턴인지 보여주는 그래픽 출력
-
-                tictactoeBoard.PrintExampleBoard();       //입력위치번호 예시 출력
-
-
-                inputSucess = InputLocationNumber(player1,  player2, ref tictactoeBoard,  gameTurnNumber);   //입력위치 입력
-
-                if (!inputSucess) continue;  //입력성공 조사
-                
-
-                if (gameTurnNumber >= 4)      //게임이 5턴 이상 되어야 승패가 갈릴 수있으므로 4부터 조사
-                {
-                    if (gameTurnNumber % 2 == 0) winner = tictactoeBoard.CheckWinner(player1);
-                    else winner = tictactoeBoard.CheckWinner(player2);
-                }
-
-                Console.Clear();
-
-                if (winner != null) break;     //승자가 생기면 종료
-
-                ++gameTurnNumber;
-            }
-
-            return winner;
-        }
-
-        public void PlayGame(string player1)
-        {
-
-        }
-
-        private bool InputLocationNumber(string player1, string player2,ref TicTacToeBoard tictactoeBoard,int gameTurnNumber)
+    {
+        public bool InputLocationNumber(string player1, string player2,ref TicTacToeBoard tictactoeBoard,int gameTurnNumber)
         {
             string inputNumberInString = null;
             int inputNumber;            
@@ -72,23 +28,11 @@ namespace TicTacToe
                         else tictactoeBoard.ModifyBoard(inputNumber, player2);
 
                         return true;
-                    }
-                    else
-                    {                        
-                        Console.Clear();
-                    }
+                    }                      
                 }
             }
-            else
-            {
-                Console.Clear();
-            }
+            Console.Clear();
             return false;
-        }
-
-        public void ShowPlayerRanking()
-        {
-
         }
 
         public void ShowWinner(string winner)
@@ -103,31 +47,74 @@ namespace TicTacToe
 
             Console.Clear();
         }
+        public void UpdateRecord(GameResult gameResult)
+        {
 
-        private void ShowActivePlayer(string player1, string player2, int gameTurnNumber)
+            StreamReader playerListFileToRead = new StreamReader(new FileStream("./playerNameList.txt",FileMode.Open));
+            List<Player> players = new List<Player>();       //플레이어들의 이름과 전적 리스트
+            string[] playerRecord;
+            Player temp = new Player();
+            string line;
+
+            while ((line = playerListFileToRead.ReadLine()) != null)
+            {
+                playerRecord = line.Split(',');
+                temp.playerName = playerRecord[0];
+                temp.win = int.Parse(playerRecord[1]);
+                temp.lose = int.Parse(playerRecord[2]);
+                temp.draw = int.Parse(playerRecord[3]);
+                players.Add(new Player(temp.playerName, temp.win, temp.lose, temp.draw));
+            }
+
+            playerListFileToRead.Close();
+
+            if(gameResult.isDraw == false)
+            {
+                foreach(Player player in players)
+                {
+                    if (player.playerName == gameResult.winner) player.win += 1;
+                    else if (player.playerName == gameResult.loser) player.lose += 1;                    
+                }
+            }
+            else
+            {
+                foreach (Player player in players)
+                {
+                    if (player.playerName == gameResult.winner) player.draw +=1;
+                    else if (player.playerName == gameResult.loser) player.draw += 1;
+                }
+            }
+
+
+            StreamWriter playerListFileToWrite = new StreamWriter(new FileStream("./playerNameList.txt", FileMode.Create),Encoding.UTF8);
+
+            foreach(Player player in players)
+            {
+                playerListFileToWrite.WriteLine("{0},{1},{2},{3}", player.playerName, player.win, player.lose,player.draw);
+            }
+
+            playerListFileToWrite.Close();
+        }
+        public void ShowActivePlayer(string player1, string player2, int gameTurnNumber)
         {
             if (gameTurnNumber % 2 == 0) Console.Write("Your turn-> ");
             else Console.Write("            ");
 
-            Console.WriteLine(player1);
+            Console.WriteLine(player1 + "○");
 
             if (gameTurnNumber % 2 != 0) Console.Write("Your turn-> ");
             else Console.Write("            ");
 
-            Console.WriteLine(player2 + "\n");
+            Console.WriteLine(player2 + "×\n");
         }
 
         public void ShowDraw()
         {
             ConsoleKeyInfo ckey;
 
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("\n\n");
             Console.WriteLine(" DRAW!!!!!");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("\n\n");
 
             ckey = Console.ReadKey();
 
