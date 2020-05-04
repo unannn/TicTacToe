@@ -15,6 +15,13 @@ namespace TicTacToe
         public const int endGame= 5;
 
     }
+    public struct Player
+    {
+        public string playerName;
+        public int win;
+        public int lose;        
+    }
+
     class TicTacToe
     {
         private string player1;

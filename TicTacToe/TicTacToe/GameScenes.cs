@@ -27,12 +27,12 @@ namespace TicTacToe
                 tictactoeBoard.PrintExampleBoard();       //입력위치번호 예시 출력
 
 
-                inputSucess = InputLocationNumber(player1,  player2, ref tictactoeBoard,  gameTurnNumber);
+                inputSucess = InputLocationNumber(player1,  player2, ref tictactoeBoard,  gameTurnNumber);   //입력위치 입력
 
-                if (!inputSucess) continue;
+                if (!inputSucess) continue;  //입력성공 조사
                 
 
-                if (gameTurnNumber >= 4)
+                if (gameTurnNumber >= 4)      //게임이 5턴 이상 되어야 승패가 갈릴 수있으므로 4부터 조사
                 {
                     if (gameTurnNumber % 2 == 0) winner = tictactoeBoard.CheckWinner(player1);
                     else winner = tictactoeBoard.CheckWinner(player2);
@@ -40,7 +40,7 @@ namespace TicTacToe
 
                 Console.Clear();
 
-                if (winner != null) break;
+                if (winner != null) break;     //승자가 생기면 종료
 
                 ++gameTurnNumber;
             }
@@ -95,13 +95,9 @@ namespace TicTacToe
         {
             ConsoleKeyInfo ckey;
             
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("\n\n");
             Console.WriteLine(winner + " WIN!!!!!");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("\n\n");
 
             ckey = Console.ReadKey();
 

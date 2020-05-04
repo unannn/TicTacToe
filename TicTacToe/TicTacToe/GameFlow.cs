@@ -54,23 +54,37 @@ namespace TicTacToe
 
         public void SelectPlayer(ref string player1)  //player vs computer
         {
-            List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
+            //List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
             StreamReader playerNameListFile = new StreamReader("./playerNameList.txt", Encoding.Default);
             ConsoleKeyInfo ckey;
             bool selectPlayer = false;
             int selectPlayerNumber = 0;
             string line;
-
+            List<Player> players = new List<Player>();       //플레이어들의 이름과 전적 리스트
+            Player temp;
             while ((line = playerNameListFile.ReadLine()) != null)
             {
-                playerNameList.Add(line);
+                string[] playerInfo = line.Split(',');
+                temp.playerName = playerInfo[0];
+                temp.win = int.Parse(playerInfo[1]);
+                temp.lose = int.Parse(playerInfo[2]);
+                players.Add(temp);
             }
+            //foreach (Player p in players)
+            //{
+            //    Console.WriteLine(p.playerName + " {0}승 {1}패", p.win, p.lose);
+            //}
+
+            //while ((line = playerNameListFile.ReadLine()) != null)
+            //{
+            //    playerNameList.Add(line);
+            //}
 
             Console.CursorVisible = false;
 
             while (!selectPlayer)
             {
-                for(int item = 0; item < playerNameList.Count; item++)
+                for(int item = 0; item < players.Count; item++)
                 {
                     if (item == selectPlayerNumber)
                     {
@@ -80,7 +94,7 @@ namespace TicTacToe
                     {
                         Console.Write("          ");
                     }
-                    Console.WriteLine(playerNameList[item]);
+                    Console.WriteLine(players[item].playerName);
                     Console.ResetColor();
 
                 }
@@ -89,18 +103,18 @@ namespace TicTacToe
                 switch (ckey.Key)          //키 입력에 따라 메뉴바 이동, 선택
                 {
                     case ConsoleKey.DownArrow:
-                        if (selectPlayerNumber >= playerNameList.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
+                        if (selectPlayerNumber >= players.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
                         else selectPlayerNumber++;
                         break;
 
                     case ConsoleKey.UpArrow:
-                        if (selectPlayerNumber <= 0) selectPlayerNumber = playerNameList.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
+                        if (selectPlayerNumber <= 0) selectPlayerNumber = players.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
                         else selectPlayerNumber--;
                         break;
 
                     case ConsoleKey.Spacebar:
                         selectPlayer = true;
-                        player1 = playerNameList[selectPlayerNumber];
+                        player1 = players[selectPlayerNumber].playerName;
                          break;
 
                     default:
@@ -115,7 +129,7 @@ namespace TicTacToe
 
         public void SelectPlayer(ref string player1, ref string player2)  //player vs player
         {
-            List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
+            //List<string> playerNameList = new List<string>();   //메뉴 리스트 생성
             StreamReader playerNameListFile = new StreamReader("./playerNameList.txt", Encoding.Default);
             ConsoleKeyInfo ckey;
             bool selectPlayer1 = false;
@@ -124,16 +138,27 @@ namespace TicTacToe
             int selectPlayerNumber = 0;
             string line;
 
+            List<Player> players = new List<Player>();       //플레이어들의 이름과 전적 리스트
+            Player temp;
             while ((line = playerNameListFile.ReadLine()) != null)
             {
-                playerNameList.Add(line);
+                string[] playerInfo = line.Split(',');
+                temp.playerName = playerInfo[0];
+                temp.win = int.Parse(playerInfo[1]);
+                temp.lose = int.Parse(playerInfo[2]);
+                players.Add(temp);
             }
+
+            //while ((line = playerNameListFile.ReadLine()) != null)
+            //{
+            //    playerNameList.Add(line);
+            //}
 
             Console.CursorVisible = false;
 
             while (!selectPlayer1 || !selectPlayer2)
             {
-                for (int item = 0; item < playerNameList.Count; item++)
+                for (int item = 0; item < players.Count; item++)
                 {
                     if (item == selectPlayerNumber)
                     {
@@ -145,7 +170,7 @@ namespace TicTacToe
                     if (selectPlayer1  && selectedPlayer1Number == item) Console.Write("player1-> ");
 
 
-                    Console.WriteLine(playerNameList[item]);
+                    Console.WriteLine(players[item].playerName);
                     Console.ResetColor();
 
                 }
@@ -155,12 +180,12 @@ namespace TicTacToe
                 {
                     case ConsoleKey.DownArrow:
 
-                        if (selectPlayerNumber >= playerNameList.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
+                        if (selectPlayerNumber >= players.Count - 1) selectPlayerNumber = 0;   //마지막 인덱스 메뉴에서 위 방향키 입력 시 처음 인덱스 메뉴로 이동
                         else if (selectPlayerNumber == selectedPlayer1Number - 1)
                         {                             
                             selectPlayerNumber += 2;
 
-                            if (selectPlayerNumber >= playerNameList.Count) selectPlayerNumber -= playerNameList.Count;
+                            if (selectPlayerNumber >= players.Count) selectPlayerNumber -= players.Count;
                         }
                         else ++selectPlayerNumber;
 
@@ -168,11 +193,11 @@ namespace TicTacToe
 
                     case ConsoleKey.UpArrow:
 
-                        if (selectPlayerNumber <= 0) selectPlayerNumber = playerNameList.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
+                        if (selectPlayerNumber <= 0) selectPlayerNumber = players.Count - 1;   //처음 인덱스 메뉴에서 위 방향키 입력 시 마지막 인덱스 메뉴로 이동
                         else if (selectPlayerNumber == selectedPlayer1Number + 1)
                         {
                             selectPlayerNumber -= 2;
-                            if (selectPlayerNumber < 0) selectPlayerNumber += playerNameList.Count;
+                            if (selectPlayerNumber < 0) selectPlayerNumber += players.Count;
 
                         }
                         else --selectPlayerNumber;
@@ -185,14 +210,14 @@ namespace TicTacToe
                         {
                             selectPlayer1 = true;
                             selectedPlayer1Number = selectPlayerNumber;
-                            player1 = playerNameList[selectedPlayer1Number];
+                            player1 = players[selectedPlayer1Number].playerName;
                             ++selectPlayerNumber;
 
                         }
                         else
                         {
                             selectPlayer2 = true;
-                            player2 = playerNameList[selectPlayerNumber];
+                            player2 = players[selectPlayerNumber].playerName;
                         }
 
 
