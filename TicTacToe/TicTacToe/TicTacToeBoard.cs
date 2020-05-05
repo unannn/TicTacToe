@@ -11,7 +11,7 @@ namespace TicTacToe
         private string player1;
         private string player2;
 
-        private char[,] board = new char[3, 3] {
+        private char[,] board = new char[3, 3] {                 //게임 보드
             { '□','□','□' } ,
             { '□','□','□' } ,
             { '□','□','□' }
@@ -21,13 +21,13 @@ namespace TicTacToe
             get { return board; }
             set { board = value; }
         }
-        public TicTacToeBoard(string player1, string player2)
+        public TicTacToeBoard(string player1, string player2)         //2P 일떄 생성자
         {
             this.player1 = player1;
             this.player2 = player2;
         }
 
-        public TicTacToeBoard(string player1)
+        public TicTacToeBoard(string player1)               //1P 일떄 생성자
         {
             this.player1 = player1;
             player2 = null;
@@ -35,8 +35,12 @@ namespace TicTacToe
 
         public void PrintBoard()              //tictactoe 보드 출력
         {
+            string pringWhiteSpace = "                                                   ";
+
             for (int row = 0; row < board.GetLength(0); row++)
             {
+                Console.Write(pringWhiteSpace);
+
                 for (int colomn = 0; colomn < board.GetLength(1); colomn++)
                 {
                     Console.Write("   {0}", board[row, colomn]);
@@ -46,12 +50,17 @@ namespace TicTacToe
             Console.WriteLine();
         }
 
-        public void PrintExampleBoard()
+        public void PrintExampleBoard()        //플레이어 입력 번호 안내 보드
         {
-            Console.Write("\n   입력위치번호    \n\n");
+            string pringWhiteSpace = "                                                   ";
+
+            Console.Write(pringWhiteSpace);
+            Console.Write("   입력위치번호    \n\n");
 
             for (int row = 0; row < board.GetLength(0); row++)
             {
+                Console.Write(pringWhiteSpace);
+
                 for (int colomn = 0; colomn < board.GetLength(1); colomn++)
                 {
                     Console.Write("    {0}", row * 3 + colomn + 1);
@@ -61,7 +70,7 @@ namespace TicTacToe
             Console.WriteLine("\n");
         }
 
-        public void ModifyBoard(int inputNumber, string activePlayer)
+        public void ModifyBoard(int inputNumber, string activePlayer)        //입력에 따라 게임 보드를 수정하는 메소드
         {
             inputNumber = inputNumber - 1;            //배열인덱스는 0부터 시작하므로
 
@@ -75,7 +84,7 @@ namespace TicTacToe
             }
         }
 
-        public string CheckWinner(string player)  //위치이동
+        public string CheckWinner(string player)  // 승자가 있는지 체크하는 메소드
         {
             for (int location = 0; location < board.GetLength(0); location++)
             {
@@ -96,7 +105,7 @@ namespace TicTacToe
             return null;
         }
 
-        public int BoardLength() { return board.Length; }
+        public int BoardLength() { return board.Length; }       //보드의 크기를 반환
 
         public bool IsSameLocation(int inputNumber)              //같은 위치에 두는지를 판별하는 메소드
         {

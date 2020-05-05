@@ -10,9 +10,8 @@ namespace TicTacToe
     {
         public const int vsComputer = 1;
         public const int vsPlayer = 2;
-        public const int addPlayer = 3;
-        public const int ranking = 4;
-        public const int endGame= 5;
+        public const int ranking = 3;
+        public const int endGame = 4;
 
     }
     public class Player
@@ -80,7 +79,7 @@ namespace TicTacToe
                         gameFlow.SelectPlayer(ref player1);
                         gameResult = gameFlow.PlayGame(player1);
 
-                        if (gameResult.winner != null) gameFlow.ShowWinner(gameResult.winner);
+                        if (gameResult.isDraw == false) gameFlow.ShowWinner(gameResult.winner);
                         else gameFlow.ShowDraw();
 
                         break;
@@ -89,15 +88,11 @@ namespace TicTacToe
                         gameFlow.SelectPlayer(ref player1, ref player2);
                         gameResult = gameFlow.PlayGame(player1, player2);
 
-                        if (gameResult.winner != null) gameFlow.ShowWinner(gameResult.winner);
+                        if (gameResult.isDraw == false) gameFlow.ShowWinner(gameResult.winner);
                         else gameFlow.ShowDraw();
                         
                         break;
-
-                    case Item.addPlayer:
-                        gameFlow.AddPlayer();
-                        break;
-
+                                            
                     case Item.ranking:
                         gameFlow.ShowPlayerRanking();
                         break;

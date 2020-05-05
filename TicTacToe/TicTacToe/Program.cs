@@ -11,7 +11,7 @@ namespace TicTacToe
         static void Main(string[] args)
         {
             TicTacToe game = new TicTacToe();
-            game.GameStart();
+            game.GameStart();            
         }
     }
 }
